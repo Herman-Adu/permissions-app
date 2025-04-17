@@ -12,7 +12,7 @@ import { hasPermission, Role } from "@/lib/auth/auth-rbac";
 const user: { id: string; roles: Role[] } = { roles: ["user"], id: "1" };
 const authorId = "1";
 
-export default function ExampleTwo() {
+export default function RoleBaseAcceessControl() {
   return (
     <div className="container, mx-auto px-4 my-6">
       <h1 className="text-3xl mb-6">Role base access control</h1>

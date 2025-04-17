@@ -40,7 +40,7 @@ type Permissions = {
   comments: {
     dataType: Comment;
     //dataType: Pick<Comment, "authorId">; // limit by picking specific props to be avaliable
-    action: "view" | "create" | "update";
+    action: "view" | "create" | "update" | "delete";
   };
 
   todos: {
@@ -56,6 +56,7 @@ const ROLES = {
       view: true,
       create: true,
       update: true,
+      delete: true,
     },
 
     todos: {
@@ -87,6 +88,7 @@ const ROLES = {
       view: (user, comment) => !user.blockedBy.includes(comment.authorId),
       create: true,
       update: (user, comment) => comment.authorId === user.id,
+      delete: (user, comment) => comment.authorId === user.id,
     },
 
     todos: {
@@ -124,7 +126,13 @@ export function hasPermission<Resource extends keyof Permissions>(
 
 // USAGE:
 
-const user: User = { blockedBy: ["2"], id: "1", roles: ["user"] };
+// hard code user
+const user: User = {
+  blockedBy: ["2"],
+  id: "1",
+  roles: ["user"],
+  //username: "User Two",
+};
 
 const todo: Todo = {
   completed: false,
@@ -135,13 +143,10 @@ const todo: Todo = {
 };
 
 // Can create a comment
-
 hasPermission(user, "comments", "create");
 
 // Can view the `todo` Todo
-
 hasPermission(user, "todos", "view", todo);
 
 // Can view all todos
-
 hasPermission(user, "todos", "view");

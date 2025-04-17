@@ -1,4 +1,7 @@
+import { User } from "@/data/types";
+
 export type Role = keyof typeof ROLES;
+
 type Permission = (typeof ROLES)[Role][number];
 
 const ROLES = {
@@ -31,15 +34,24 @@ export function hasPermission(
   });
 }
 
-/* // USAGE:
+// USAGE:
 
-const user: User = { id: "1", roles: ["user"] };
+// hard code user
+const user: User = {
+  id: "1",
+  roles: ["user"],
+  blockedBy: [],
+  username: "User One",
+};
 
 // Can create a comment
-
 hasPermission(user, "create:comments");
 
 // Can view all comments
-
 hasPermission(user, "view:comments");
- */
+
+// Can update his own comments
+hasPermission(user, "update:ownComments");
+
+// Can delete his own comments
+hasPermission(user, "delete:ownComments");

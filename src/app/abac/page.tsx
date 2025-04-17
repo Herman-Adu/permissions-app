@@ -1,3 +1,6 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +13,6 @@ import {
 import { hasPermission } from "@/lib/auth/auth-abac";
 import { User, type Todo } from "@/data/types";
 import { CheckIcon, XIcon } from "lucide-react";
-import { auth } from "@clerk/nextjs/server";
-import { SignInButton } from "@clerk/nextjs";
 
 const todos = [
   {
@@ -32,44 +33,77 @@ const todos = [
     id: "3",
     title: "Build Project",
     userId: "2",
-    completed: false,
-    invitedUsers: [],
+    completed: true,
+    invitedUsers: ["user_2vjHj20yihQ6QZKka7LkPaILTnr"],
   },
   {
     id: "4",
     title: "Master Auth",
-    userId: "2",
+    userId: "3",
+    completed: false,
+    invitedUsers: ["1", "2", "user_2vjHj20yihQ6QZKka7LkPaILTnr"],
+  },
+  {
+    id: "5",
+    title: "Next JS",
+    userId: "4",
     completed: true,
-    invitedUsers: ["1", "3"],
+    invitedUsers: ["3"],
+  },
+  {
+    id: "6",
+    title: "Clerk User 1",
+    userId: "user_2vjHj20yihQ6QZKka7LkPaILTnr",
+    completed: true,
+    invitedUsers: ["2"],
+  },
+  {
+    id: "7",
+    title: "Clerk User 2",
+    userId: "user_2vj1ihTzEqIpiF4VGlnBACFWe3J",
+    completed: false,
+    invitedUsers: ["4"],
   },
 ];
 
 // hard code user
-//const user: User = { roles: ["user", "moderator"], id: "1", blockedBy: ["2"] };
+/* const user: User = {
+  roles: ["user", "moderator"],
+  id: "1",
+  blockedBy: ["2"],
+}; */
 
-export default async function ExampleFour() {
+export default async function AttributeBaseAcceessControl() {
   // get user id
   const { sessionClaims, userId } = await auth();
 
-  if (sessionClaims == null || userId == null) {
-    return (
-      <Button asChild>
-        <SignInButton />
-      </Button>
-    );
+  // if no user or role return redirect to sign in page
+  if (userId == null || sessionClaims.roles == null) {
+    return redirect(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL as string);
   }
 
-  const user = { id: userId, roles: sessionClaims.roles, blockedBy: [] };
-  console.log("User: ", user);
+  const userDetails = await currentUser();
+  //console.log("User: ", userDetails);
+
+  // build user object
+  const user: User = {
+    id: userId,
+    roles: sessionClaims.roles,
+    blockedBy: [],
+    username: userDetails?.username as string,
+  };
+
+  //console.log("User: ", user);
 
   return (
     <div className="container mx-auto px-4 my-6">
-      <h1 className="text-2xl font-semibold mb-4">
-        {user.id}: {user.roles.join(", ")}
-      </h1>
+      <h1 className="text-2xl mb-6">Attribute Base Access Control</h1>
+      <div className="text-1xl mb-2">Welcome back {user.username}</div>
+      <div className="text-1xl mb-2">Role: {sessionClaims?.roles}</div>
+      <div className="text-1xl mb-6">UserId: {user.id}</div>
 
       {/* Button check across all todos */}
-      <div className="flex gap-2 mb-4">
+      <div className="container flex flex-wrap gap-2 mb-4">
         <GeneralButtonCheck user={user} resource="todos" action="view" />
         <GeneralButtonCheck user={user} resource="todos" action="create" />
         <GeneralButtonCheck user={user} resource="todos" action="update" />
@@ -77,7 +111,7 @@ export default async function ExampleFour() {
       </div>
 
       {/* loop through all todos passing each one into the Todos function */}
-      <ul className="grid gap-4 grid-cols-2">
+      <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {todos.map((todo) => (
           <li key={todo.id}>
             <Todo user={user} {...todo} />
@@ -108,7 +142,7 @@ function Todo({ user, ...todo }: { user: User } & Todo) {
           {invitedUsers.length > 0 && `+ user ${invitedUsers.join(", User")}`}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="gap-2">
+      <CardFooter className="container flex flex-wrap gap-2 ">
         <TodoButtonCheck user={user} action="view" todo={todo} />
         <TodoButtonCheck user={user} action="update" todo={todo} />
         <TodoButtonCheck user={user} action="delete" todo={todo} />
