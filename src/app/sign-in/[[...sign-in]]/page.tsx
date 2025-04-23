@@ -1,6 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 
-export default function Page() {
+export default function SignInRoute() {
   return (
     <div className="flex h-full w-full">
       <div className="m-auto">

@@ -1,7 +1,6 @@
 import { User } from "@/data/types";
 
 export type Role = keyof typeof ROLES;
-
 type Permission = (typeof ROLES)[Role][number];
 
 const ROLES = {
@@ -16,6 +15,7 @@ const ROLES = {
     "create:comments",
     "update:ownComments",
     "delete:ownComments",
+    "delete:comments",
   ],
   user: [
     "view:comments",
@@ -49,6 +49,12 @@ hasPermission(user, "create:comments");
 
 // Can view all comments
 hasPermission(user, "view:comments");
+
+// Can update all comments
+hasPermission(user, "update:comments");
+
+// Can delete all comments
+hasPermission(user, "delete:comments");
 
 // Can update his own comments
 hasPermission(user, "update:ownComments");

@@ -96,28 +96,40 @@ export default async function AttributeBaseAcceessControl() {
   //console.log("User: ", user);
 
   return (
-    <div className="container mx-auto px-4 my-6">
-      <h1 className="text-2xl mb-6">Attribute Base Access Control</h1>
-      <div className="text-1xl mb-2">Welcome back {user.username}</div>
-      <div className="text-1xl mb-2">Role: {sessionClaims?.roles}</div>
-      <div className="text-1xl mb-6">UserId: {user.id}</div>
+    <div className="flex flex-col-reverse lg:grid md:grid-cols-[6fr_2fr]">
+      <div className="bg-white/50 rounded-xl py-7 px-8 m-6 overflow-hidden">
+        <h1 className="text-2xl mb-6">Attribute Base Access Control</h1>
+        <div className="text-1xl mb-2">Welcome back {user.username}</div>
+        <div className="text-1xl mb-2">Role: {sessionClaims?.roles}</div>
+        <div className="text-1xl mb-6">UserId: {user.id}</div>
 
-      {/* Button check across all todos */}
-      <div className="container flex flex-wrap gap-2 mb-4">
-        <GeneralButtonCheck user={user} resource="todos" action="view" />
-        <GeneralButtonCheck user={user} resource="todos" action="create" />
-        <GeneralButtonCheck user={user} resource="todos" action="update" />
-        <GeneralButtonCheck user={user} resource="todos" action="delete" />
+        {/* Button check across all todos */}
+        <div className="container flex flex-wrap gap-2 mb-4">
+          <GeneralButtonCheck user={user} resource="todos" action="view" />
+          <GeneralButtonCheck user={user} resource="todos" action="create" />
+          <GeneralButtonCheck user={user} resource="todos" action="update" />
+          <GeneralButtonCheck user={user} resource="todos" action="delete" />
+        </div>
+
+        {/* loop through all todos passing each one into the Todos function */}
+        <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {todos.map((todo) => (
+            <li key={todo.id}>
+              <Todo user={user} {...todo} />
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* loop through all todos passing each one into the Todos function */}
-      <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <Todo user={user} {...todo} />
-          </li>
-        ))}
-      </ul>
+      <aside className="bg-white/50 rounded-xl py-7 px-8 m-6  h-fit w-fit hidden md:block">
+        <h1 className="text-2xl mb-6">Table of contents</h1>
+        <p className="mt-6 mb-6 text-transparent">
+          As you can see the system very quickly spirals out of control it works
+          great for relatively simple systems but as soon as you get more
+          complex it becomes very limited. Leading us into the final permission
+          system we are going to build and discuss, Attribute Based Role Access
+        </p>
+      </aside>
     </div>
   );
 }

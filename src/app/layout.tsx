@@ -37,10 +37,10 @@ export default function RootLayout({
             <div className="z-20">
               <Header />
             </div>
-            <main className="container mx-auto bg-white/50 rounded-xl py-7 px-8 m-6 overflow-hidden">
-              {children}
-            </main>
-            <Footer />
+            <main className="container mx-auto">{children}</main>
+            <div className="z-20">
+              <Footer />
+            </div>
           </div>
         </body>
       </html>

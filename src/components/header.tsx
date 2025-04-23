@@ -18,9 +18,9 @@ import { Button } from "./ui/button";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/permissions", label: "Permissions" },
+  { href: "/basic-permissions", label: "Permissions" },
   { href: "/rbac", label: "RBAC " },
-  { href: "/clerk-integration", label: "Clerk Integration" },
+  { href: "/clerk-authentication", label: "Clerk Authentication" },
   { href: "/abac", label: "ABAC" },
 ];
 
